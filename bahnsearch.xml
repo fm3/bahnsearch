@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription>
+    <ShortName>Bahnsearch</ShortName>
+    <Description>Bahnsearch</Description>
+    <InputEncoding>UTF-8</InputEncoding>
+    <Url type="text/html" template="http://www.florianmeinel.de/projects/bahnsearch/?q={searchTerms}" />
+</OpenSearchDescription>
