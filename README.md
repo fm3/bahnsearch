@@ -1,7 +1,8 @@
 # Bahnsearch: query bahn.de from your URL bar
 
 Redirects to bahn.de (German public transportation) search results with parameters parsed from the url.
-Designed for use with an OpenSearch browser plugin
+
+Currently live at http://www.florianmeinel.de/projects/bahnsearch/
 
 Sample queries:
  * hannover to braunschweig waage tomorrow 1330
@@ -10,6 +11,4 @@ Sample queries:
 
 ### TODO
 
-* Option to set own home station (via cookie?)
 * Parse more date formats
-* Deploy publicly, add OpenSearch plugin xml

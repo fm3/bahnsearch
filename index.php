@@ -8,7 +8,12 @@
   tegel 430 a
 */
 
-$default_home = 'Berlin';
+if (query_is_empty()) {
+	header('Location: ./install.html');
+	die();
+}
+
+$home = get_home();
 
 $query = get_query();
 
@@ -16,12 +21,24 @@ $time_type = pop_time_type($query);
 $time = pop_time($query);
 $date = pop_date($query);
 $to = extract_to($query);
-$from = extract_from($query, $default_home);
+$from = extract_from($query, $home);
 
 print_debug($from, $to, $date, $time, $time_type);
 
 redirect_to_bahn_api($from, $to, $date, $time, $time_type);
 
+function query_is_empty() {
+	if (isset($_GET['q'])) {
+		return ($_GET['q'] == '');
+	}
+	return true;
+}
+
+function get_home() {
+    if (isset($_GET['home']))
+        return $_GET['home'];
+    return 'Berlin';
+}
 
 function get_query() {
     $query_string = 'München';
