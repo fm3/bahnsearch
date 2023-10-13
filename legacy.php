@@ -1,5 +1,4 @@
 <?php
-
 /*
  Redirects to bahn.de public transport search with parameters parsed from url parameters
  designed for use with OpenSearch browser search engine.
@@ -54,9 +53,9 @@ function get_query() {
 function pop_time_type(&$query) {
     if (end($query) == 'a') {
         array_pop($query);
-        return 'A';
+        return 'arrive';
     }
-    return 'D';
+    return 'depart';
 }
 
 function pop_time(&$query) {
@@ -109,7 +108,11 @@ function extract_date($literal) {
 }
 
 function format_date($date) {
-    return date("Y-m-d", $date);
+    $weekdays = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+    $weekday = $weekdays[date("w", $date)];
+    $datestring = date("d.m.y", $date);
+
+    return "$weekday, $datestring";
 }
 
 function extract_to($query) {
@@ -143,26 +146,14 @@ function print_debug($from, $to, $date, $time, $time_type) {
     echo("Interpretation: From <b>$from</b> to <b>$to</b> on <b>$date</b>, <b>$time_type</b> at <b>$time</b>");
 }
 
-function query_location($to) {
-    return json_decode(file_get_contents("https://www.bahn.de/web/api/reiseloesung/orte?suchbegriff=$to&typ=ALL&limit=1"))[0];
-}
-
 function redirect_to_bahn_api($from, $to, $date, $time, $time_type) {
-
-    $to_response = query_location(urlencode($to));
-    $from_response = query_location(urlencode($from));
-
-    $from_name = urlencode($from_response->name);
-    $from_extended_id = urlencode($from_response->extId);
-    $from_id = urlencode($from_response->id);
-    $to_name = urlencode($to_response->name);
-    $to_extended_id = urlencode($to_response->extId);
-    $to_id = urlencode($to_response->id);
-
-    $date_and_time = urlencode("{$date}T{$time}:00");
+    $to = urlencode($to);
+    $from = urlencode($from);
+    $date = urlencode($date);
+    $time = urlencode($time);
     $time_type = urlencode($time_type);
 
-    header("Location: https://www.bahn.de/buchung/fahrplan/suche#sts=true&so=$from_name&zo=$to_name&kl=2&r=13:16:KLASSENLOS:1&soid=$from_id&zoid=$to_id&sot=ST&zot=ST&soei=$from_extended_id&zoei=$to_extended_id&hd=$date_and_time&hza=$time_type&ar=false&s=true&d=false&hz=%5B%5D&fm=false&bp=false");
+    header("Location: https://reiseauskunft.bahn.de/bin/query.exe/dn?country=DEU&ignoreTypeCheck=yes&S=$from&Z=$to&date=$date&time=$time&timesel=$time_type&optimize=0&start=1");
     die();
 }
 
